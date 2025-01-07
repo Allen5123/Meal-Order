@@ -33,14 +33,13 @@ const __dirname = dirname(__filename);
 const app = express();
 const server = http.createServer();
 const dailySchedule = DailySchedule();
-
 app.use(cors());
 app.set('port', process.env.PORT);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
+app.use(express.static(path.join(__dirname, 'public')));
 server.on('request', app);
 const wsserver = new wsServer(server);
 

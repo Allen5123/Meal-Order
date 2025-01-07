@@ -12,13 +12,16 @@ const pool = mysql.createPool({
     connectionLimit: 50,
 });
 
-if (pool) {
-    console.log(`Database Connected`);
-}
-else {
-    console.log("Error in the connection");
-    console.log(err);
-}
+pool.getConnection((err, connection) => {
+    if (err) {
+        console.log("Error in the connection");
+        console.log(err);
+    }
+    else {
+        console.log(`Database Connected`);
+        connection.release();
+    }
+});
 
 const query = async (sql, param) => {
     return await pool.query(sql, param);

@@ -1,8 +1,6 @@
 import express from 'express';
 import { query } from "../models/dbasync.model.js";
 import { query_callBack } from "../models/db.model.js"
-import { Meal } from '../models/meal.model.js'
-// import { blob_config } from '../config/blob.config.js';
 import upload from '../models/upload.model.js'
 
 const router = express.Router();
@@ -37,35 +35,22 @@ const updateDefaultInventory = async (req, res, net) => {
             });
 }
 
-const addMealItem = (req, res, next) => {
-    const mealData = req.body.newMeal;
-    console.log("addMealItem, mealData = ", mealData);
-
-    let newMeal = new Meal(mealData);
-    
-    // save newMeal to db
-    Meal.insertToDb(newMeal, query_callBack, res);
-}
-
-const uploadMealItemImage = (req, res, next) => {
-    console.log("uploadMealItemImage");
-    var image_url = req.file.url;
-    console.log("original image_url = ", image_url);
-    image_url = `${req.file.url.split('?')[0] + '?' + process.env.AZURE_BLOB_SAS}`;
-    console.log("modified image_url = ", image_url);
-    
-    res.json({image_url: image_url});
-    // let img_url = req.body['img_url'];
-    // console.log("img_url = ", img_url);
-    // const img = req.files['img'][0];
-    // console.log("img = ", img);
-
+const addMealItem = async (req, res, next) => {
+    const {Vendor_ID, Meal_Name, Description, Price, Inventory, Default_Inventory} = JSON.parse(req.body.data);
+    const Image_url = `${req.file.url.split('?')[0] + '?' + process.env.AZURE_BLOB_SAS}`;
+    try {
+        const [row, ] = await query('INSERT INTO `Meal` (`Vendor_ID`, `Meal_Name`, `Description`, `Price`,\
+                    `Inventory`, `Image_url`, `Default_Inventory`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                    [Vendor_ID, Meal_Name, Description, Price, JSON.stringify(Inventory), Image_url, Default_Inventory]);
+        return res.json({Meal_ID: row.insertId, Image_url: Image_url});
+    } catch (error) {
+        console.log("Error in addMealItem: ", error);
+        return res.json(null);
+    }
 }
 
 router.get('/', getAllMeals); 
 router.post('/updateDefaultInventory', updateDefaultInventory);
-router.post('/addMealItem', addMealItem);
-// router.post('/uploadMealItemImage', blob_config.MEAL_IMG_UPLOAD.fields([{ name: 'img_url' }, { name: 'img' }]), uploadMealItemImage);
-router.post('/uploadMealItemImage', upload.single('img'), uploadMealItemImage);
+router.post('/addMealItem', upload.single('img'), addMealItem);
 
 export default router;

@@ -9,7 +9,7 @@ ENV TZ="Asia/Taipei"
 RUN npm install -g nodemon
 
 # Creating the working directory
-WORKDIR .
+WORKDIR /app
 
 # Copies the dependencies in the package.json file
 COPY package.json .
@@ -24,4 +24,4 @@ COPY . .
 EXPOSE 8081
 
 # Start the Docker container Node.js application
-CMD ["node", "app.js"]
+CMD ["node", "/app/app.js"]
