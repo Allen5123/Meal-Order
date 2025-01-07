@@ -76,7 +76,7 @@ export default function Customer() {
 
             {/* vendorBlocks */}
             <div className='VendorBlocks'>
-                {vendors.map(e=>{return <VendorBlock key={e.Vendor_ID} imgurl={e.Image_url} name={e.Name} addr={e.Address} vid={e.Vendor_ID} cid={id!}/>})}
+                {vendors.map(e=>{return <VendorBlock key={e.Vendor_ID} imgurl={e.Image_url} name={e.Name} addr={e.Address} vid={e.Vendor_ID}/>})}
             </div>
         </>
     );

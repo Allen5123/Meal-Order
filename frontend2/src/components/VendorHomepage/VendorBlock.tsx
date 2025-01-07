@@ -1,10 +1,9 @@
+import { Link } from "react-router-dom";
 import style from "../../style/CustomerHomepage/VendorBlock.module.css";
-// import {Link, Route, Routes} from 'react-router-dom';
 
-export default function VendorBlock({imgurl, name, addr, vid, cid}:{imgurl:string, name:string, addr:string, vid:number, cid:string}){
-    // const link_url: string = "1"
+export default function VendorBlock({imgurl, name, addr, vid}:{imgurl:string, name:string, addr:string, vid:number}){
     return(
-        <a href = {cid+`/vendor/${vid}`}>
+        <Link to={`vendor/${vid}`}>
             <button type="submit" className={style.VendorBlock}>
                 <div className={style.VendorImg}>
                     <img src={imgurl} alt='error'></img>
@@ -15,6 +14,6 @@ export default function VendorBlock({imgurl, name, addr, vid, cid}:{imgurl:strin
                 </div>
 
             </button>
-        </a>
+        </Link>
     );
 };
