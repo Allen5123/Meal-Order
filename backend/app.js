@@ -44,7 +44,6 @@ server.on('request', app);
 const wsserver = new wsServer(server);
 
 // Router set up
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/allMeals', allMealsRouter);
 app.use('/mealAmount', mealAmountRouter);
@@ -58,6 +57,10 @@ app.use('/vendor',vendorRouter);
 app.use('/customer', customerRouter)
 app.use('/orderMeal',orderMealRouter)
 app.use('/k8sTest', k8sTestRouter)
+app.use('/', indexRouter);
+app.get('*', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 const Registry = promClient.collectDefaultMetrics;
 const register = new Registry();
