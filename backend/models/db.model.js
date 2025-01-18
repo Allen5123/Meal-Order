@@ -2,6 +2,7 @@ import mysql from 'mysql2';
 import { db_config } from "../config/db.config.js";
 
 console.log("Trying to connect to DB...");
+console.log(db_config.HOST, db_config.PORT, db_config.USER, db_config.PASSWORD, db_config.DB);
 const connection = mysql.createConnection({
     host: db_config.HOST,
     port: db_config.PORT,

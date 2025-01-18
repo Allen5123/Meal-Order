@@ -3,5 +3,6 @@ Dockerfile
 node_modules
 .gitignore
 .DS_Store
+build
 
 .env

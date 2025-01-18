@@ -72,7 +72,7 @@ app.get('/metrics', (async (request, response) => {
 }));
 
 server.listen(process.env.PORT, () => {
-  console.log(`WebSocket server is running on port ${process.env.PORT}`)
+  console.log(`server is running on port ${process.env.PORT}`)
 })
 
 export default app;

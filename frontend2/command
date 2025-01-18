@@ -1,0 +1,4 @@
+#Build frontend image
+docker build -t frontend .
+#Run frontend image
+docker run --env-file .env -p 3000:3000 frontend 

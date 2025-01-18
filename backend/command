@@ -1,0 +1,4 @@
+#Build frontend image
+docker build -t backend .
+#Run frontend image
+docker run --env-file .env -p 8081:8081 backend

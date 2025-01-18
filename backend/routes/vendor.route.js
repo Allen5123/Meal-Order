@@ -1,7 +1,5 @@
 import express from 'express';
 import { query } from "../models/dbasync.model.js";
-import { query_callBack } from "../models/db.model.js"
-import SendMail from "../models/mail.model.js"
 
 const router = express.Router();
 
@@ -57,7 +55,7 @@ const getConfirmOrder = async (req, res, net) => {
         const query_str = 'SELECT Email FROM Customer WHERE Customer_ID =\
             (SELECT Customer_ID from`Order` WHERE Order_ID = ?)'
         const [rows, fields] = await query(query_str, [orderID]);
-        SendMail({to: rows[0].Email, subject: `"FoodApp: 餐點確認通知"`, text: `"店家已接單"`})
+        // SendMail({to: rows[0].Email, subject: `"FoodApp: 餐點確認通知"`, text: `"店家已接單"`})
         //console.log(rows);
         res.json(rows);
     }
@@ -66,40 +64,48 @@ const getConfirmOrder = async (req, res, net) => {
     }
 }
 
-const getFinishOrder = (req, res, net) => {
+const getFinishOrder = async (req, res, net) => {
     //console.log("confirm order, orderID = ", req.body.orderID);
     const orderID = req.body.orderID;
-    query_callBack('UPDATE `Order` SET `Status` = "READY_FOR_PICKUP"\
-                    WHERE `Order_ID` = ?', [orderID],
-        (err) => {console.log(`Error getFinishOrder: ${err}`)}
-    );
+    try {
+        await query('UPDATE `Order` SET `Status` = "READY_FOR_PICKUP" WHERE `Order_ID` = ?', [orderID]);
+    }
+    catch (err) {
+        throw err;
+    }
 }
 
-const getCancelConfirm = (req, res, net) => {
+const getCancelConfirm = async (req, res, net) => {
     //console.log("confirm order, orderID = ", req.body.orderID);
     const orderID = req.body.orderID;
-    query_callBack('UPDATE `Order` SET `Status` = "CANCELLED_CHECKED"\
-                    WHERE `Order_ID` = ?', [orderID],
-        (err) => {console.log(`Error getCancelConfirm: ${err}`)}
-    );
+    try {
+        await query('UPDATE `Order` SET `Status` = "CANCELLED_CHECKED" WHERE `Order_ID` = ?', [orderID]);
+    }
+    catch (err) {
+        throw err;
+    }
 }
 
-const getPickupConfirm = (req, res, net) => {
+const getPickupConfirm = async (req, res, net) => {
     //console.log("pickup order, orderID = ", req.body.orderID);
     const orderID = req.body.orderID;
-    query_callBack('UPDATE `Order` SET `Status` = "PICKED_UP"\
-                    WHERE `Order_ID` = ?', [orderID],
-        (err) => {console.log(`Error getPickupConfirm: ${err}`)}
-    );
+    try {
+        await query('UPDATE `Order` SET `Status` = "PICKED_UP" WHERE `Order_ID` = ?', [orderID]);
+    }
+    catch (err) {
+        throw err;
+    }
 }
 
-const getCancelOrder = (req, res, net) => {
+const getCancelOrder = async (req, res, net) => {
     //console.log("confirm order, orderID = ", req.body.orderID);
     const orderID = req.body.orderID;
-    query_callBack('UPDATE `Order` SET `Status` = "CANCELLED_UNCHECKED"\
-                    WHERE `Order_ID` = ?', [orderID],
-        (err) => {console.log(`Error getCancelOrder: ${err}`)}
-    );
+    try {
+        await query('UPDATE `Order` SET `Status` = "CANCELLED_UNCHECKED" WHERE `Order_ID` = ?', [orderID]);
+    }
+    catch (err) {
+        throw err;
+    }
 }
 
 router.get('/', getOrders);

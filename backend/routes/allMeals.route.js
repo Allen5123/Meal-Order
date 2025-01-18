@@ -1,6 +1,5 @@
 import express from 'express';
 import { query } from "../models/dbasync.model.js";
-import { query_callBack } from "../models/db.model.js"
 import upload from '../models/upload.model.js'
 
 const router = express.Router();
@@ -21,18 +20,14 @@ const updateDefaultInventory = async (req, res, net) => {
     const mealId = req.body.mealId;
     const count = req.body.count;
 
-    query_callBack('UPDATE `Meal` SET `Default_Inventory` = ?\
-            WHERE `Meal_ID` = ?', [count, mealId],
-            (err, result) => {
-                if (err) {
-                    console.log(`Error updating the default inventory: ${err}`);
-                    res.sendStatus(500);
-                }
-                else{
-                    console.log("Updated row(s): ", result.affectedRows);
-                    res.sendStatus(200);
-                }
-            });
+    try {
+        const [row, ] = await query('UPDATE `Meal` SET `Default_Inventory` = ?\
+            WHERE `Meal_ID` = ?', [count, mealId]);
+        res.sendStatus(200);
+    } catch (error) {
+        console.log("Error updating the default inventory: ", error);
+        res.sendStatus(500);
+    }
 }
 
 const addMealItem = async (req, res, next) => {

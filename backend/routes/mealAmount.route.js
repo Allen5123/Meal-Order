@@ -1,6 +1,5 @@
 import express from 'express';
 import { query } from "../models/dbasync.model.js";
-import { query_callBack } from "../models/db.model.js"
 
 const router = express.Router();
 const getAllMeals = async (req, res, next) => {
@@ -22,18 +21,14 @@ const updateAllInventory = async (req, res, next) => {
     for (const meal of req.body){
         const mealId = meal.mealId;
         const inventory = meal.inventory;
-        
-        query_callBack('UPDATE `Meal` SET `Inventory` =?\
-                        WHERE `Meal_ID` = ?', [JSON.stringify(inventory), mealId],
-            (err, result) => {
-                if (err){
-                    console.log(`Error updating the inventory: ${err}`);
-                    error = true;
-                }
-                else{
-                    console.log("Updated row(s): ", result.affectedRows);
-                }
-            });
+        try {
+            const [rows, fields] = await query('UPDATE `Meal` SET `Inventory` =?\
+                        WHERE `Meal_ID` = ?', [JSON.stringify(inventory), mealId]);
+        }
+        catch (err) {
+            console.log(`Error updating the inventory: ${err}`);
+            error = true;
+        }
     }
     if (error) res.sendStatus(500);
     else res.sendStatus(200);

@@ -11,7 +11,7 @@ function InputImgField({ img, handleImgChange }: { img?: File, handleImgChange: 
         inputImgref.current?.click();
     }
     return (
-        <div className={style.InputImg}>
+        <div>
             <input style={{ display: "none" }} ref={inputImgref} type="file" onChange={handleImgChange} />
             {img ? <img src={URL.createObjectURL(img)} onClick={handleImgClick} /> : <div onClick={handleImgClick}>請上傳餐廳圖片</div>}
         </div>

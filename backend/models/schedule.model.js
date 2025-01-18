@@ -1,6 +1,6 @@
 import { scheduleJob, RecurrenceRule } from "node-schedule";
 import { query } from "../models/dbasync.model.js";
-import SendMail from "./mail.model.js";
+// import SendMail from "./mail.model.js";
 
 export const SendDailyEmail = async () => {
     try {
